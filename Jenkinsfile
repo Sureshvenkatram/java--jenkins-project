@@ -57,9 +57,9 @@ pipeline {
             steps{
                 
          sh 'mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=sonarjenkins \
-  -Dsonar.host.url=http://52.207.93.244:9000 \
-  -Dsonar.login=sqp_6309183902b912486b03cce6741d176dd433b16f'
+  -Dsonar.projectKey=sonardemo \
+  -Dsonar.host.url=http://44.204.8.134:9000 \
+  -Dsonar.login=sqp_0e31639928f2c7fc7987f81325c131352169679e'
                 }
         }
        stage('Building image') {
