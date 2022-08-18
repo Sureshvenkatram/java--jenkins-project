@@ -3,19 +3,23 @@ pipeline {
     tools {
        maven 'maven8'
     }
+    environment {
+         imageName = "sureshcld28/sureshram12"
+    }
     stages {
         stage("git clone"){
             steps{
-                git 'https://github.com/Abbas811/java--jenkins-project_sonar.git'
+                git 'https://github.com/kajamal/java--jenkins-project.git'
             }
 
         }
         stage("build code"){
             steps{
                 sh "mvn clean install"
+            }
+
         }
-        }
-        
+
         stage("Docker login"){
             steps{
                withCredentials([string(credentialsId: 'docker', variable: 'docker_hub_password')]) {
@@ -25,16 +29,16 @@ pipeline {
             }
 
         }
-         stage("build Docker image"){
+        stage("build Docker image"){
             steps{
-                sh "docker build -t sureshcld28/suresh007:1.5 ."
+                sh "docker build -t sureshcld28/sureshram12 ."
 
             }
 
         }
         stage("Docker push"){
             steps{
-                sh "docker  push sureshcld28/suresh007:1.5"
+                sh "docker  push sureshcld28/sureshram12"
 
             }
 
@@ -50,10 +54,17 @@ pipeline {
             steps{
                 
          sh 'mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=jenkins-dev \
-  -Dsonar.host.url=http://18.212.250.27:9000 \
-  -Dsonar.login=sqp_d6b7c19ced9213bccc50bb0bc0118bf848fe0834'
+  -Dsonar.projectKey=sonarqube \
+  -Dsonar.host.url=http://3.86.255.94:9000 \
+  -Dsonar.login=sqp_0100c6bbf3959df53d78fde5832480f184c101fc'
                 }
         }
-    }
+          stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imageName
+        }
+      }
+   }
+}
 }
