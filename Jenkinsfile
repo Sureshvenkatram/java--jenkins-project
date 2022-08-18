@@ -22,10 +22,8 @@ pipeline {
 
         stage("Docker login"){
             steps{
-               withCredentials([string(credentialsId: 'docker', variable: 'docker_hub_password')]) {
+              withCredentials([string(credentialsId: 'docker', variable: 'docker_hub_password')]) {
                    sh "docker login -u sureshcld28 -p ${docker_hub_Password}"
-               }
-               
 
 }
             }
@@ -68,4 +66,5 @@ pipeline {
         }
       }
    }
+}
 }
