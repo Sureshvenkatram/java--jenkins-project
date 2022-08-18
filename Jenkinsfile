@@ -1,40 +1,47 @@
 pipeline {
     agent any
+     environment {
+         imageName = "sureshcld28/sureshram12"
+    }
     tools {
        maven 'maven8'
     }
+   
     stages {
         stage("git clone"){
             steps{
-                git 'https://github.com/Abbas811/java--jenkins-project_sonar.git'
+                git 'https://github.com/kajamal/java--jenkins-project.git'
             }
 
         }
         stage("build code"){
             steps{
                 sh "mvn clean install"
+            }
+
         }
-        }
-        
+
         stage("Docker login"){
             steps{
-               withCredentials([string(credentialsId: 'docker', variable: 'docker_hub_password')]) {
-                   sh "docker login -u sureshcld28 -p ${docker_hub_Password}"
+              withCredentials([string(credentialsId: 'docker2', variable: 'docker_hub')]) {
+               sh "docker login -u sureshcld28 -p ${docker_hub}"
+               }
+               
 
 }
             }
 
-        }
-         stage("build Docker image"){
+        
+        stage("build Docker image"){
             steps{
-                sh "docker build -t sureshcld28/suresh007:1.5 ."
+                sh "docker build -t sureshcld28/sureshram12 ."
 
             }
 
         }
         stage("Docker push"){
             steps{
-                sh "docker  push sureshcld28/suresh007:1.5"
+                sh "docker  push sureshcld28/sureshram12"
 
             }
 
@@ -50,10 +57,19 @@ pipeline {
             steps{
                 
          sh 'mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=jenkins-dev \
-  -Dsonar.host.url=http://18.212.250.27:9000 \
-  -Dsonar.login=sqp_d6b7c19ced9213bccc50bb0bc0118bf848fe0834'
+  -Dsonar.projectKey=sonarjenkins \
+  -Dsonar.host.url=http://52.207.93.244:9000 \
+  -Dsonar.login=sqp_6309183902b912486b03cce6741d176dd433b16f'
                 }
         }
+       stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imageName
+        }
+      }
+       }
+      
     }
 }
+
