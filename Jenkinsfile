@@ -1,11 +1,12 @@
 pipeline {
     agent any
+     environment {
+         imageName = "sureshcld28/sureshram12"
+    }
     tools {
        maven 'maven8'
     }
-    environment {
-         imageName = "sureshcld28/sureshram12"
-    }
+   
     stages {
         stage("git clone"){
             steps{
@@ -22,13 +23,15 @@ pipeline {
 
         stage("Docker login"){
             steps{
-              withCredentials([string(credentialsId: 'docker', variable: 'docker_hub_password')]) {
-                   sh "docker login -u sureshcld28 -p ${docker_hub_Password}"
+              withCredentials([string(credentialsId: 'docker2', variable: 'docker_hub')]) {
+               sh "docker login -u sureshcld28 -p ${docker_hub}"
+               }
+               
 
 }
             }
 
-        }
+        
         stage("build Docker image"){
             steps{
                 sh "docker build -t sureshcld28/sureshram12 ."
@@ -54,17 +57,19 @@ pipeline {
             steps{
                 
          sh 'mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=sonarqube \
-  -Dsonar.host.url=http://3.86.255.94:9000 \
-  -Dsonar.login=sqp_0100c6bbf3959df53d78fde5832480f184c101fc'
+  -Dsonar.projectKey=sonarjenkins \
+  -Dsonar.host.url=http://52.207.93.244:9000 \
+  -Dsonar.login=sqp_6309183902b912486b03cce6741d176dd433b16f'
                 }
         }
-          stage('Building image') {
+       stage('Building image') {
       steps{
         script {
           dockerImage = docker.build imageName
         }
       }
-   }
+       }
+      
+    }
 }
-}
+
